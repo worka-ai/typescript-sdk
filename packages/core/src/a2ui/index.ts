@@ -256,3 +256,77 @@ export const audioPlayer = (id: string, url: JsonObject): JsonObject =>
 
 export const video = (id: string, url: JsonObject): JsonObject =>
     component(id, 'Video', { url });
+
+export const timeline = (
+    id: string,
+    children: JsonObject,
+    orientation?: string,
+    alignment?: string,
+    autoFollow?: JsonObject,
+    laneMode?: string,
+    currentItemId?: JsonObject
+): JsonObject => {
+    const props: JsonObject = { children };
+    if (orientation) props.orientation = orientation;
+    if (alignment) props.alignment = alignment;
+    if (autoFollow) props.autoFollow = autoFollow;
+    if (laneMode) props.laneMode = laneMode;
+    if (currentItemId) props.currentItemId = currentItemId;
+    return component(id, 'Timeline', props);
+};
+
+export const timelineItem = (
+    id: string,
+    itemId: string,
+    title?: JsonObject,
+    subtitle?: JsonObject,
+    timestamp?: JsonObject,
+    kind?: string,
+    state?: string,
+    severity?: string,
+    icon?: JsonObject,
+    contentChild?: string,
+    actionPayload?: JsonObject
+): JsonObject => {
+    const props: JsonObject = { itemId };
+    if (title) props.title = title;
+    if (subtitle) props.subtitle = subtitle;
+    if (timestamp) props.timestamp = timestamp;
+    if (kind) props.kind = kind;
+    if (state) props.state = state;
+    if (severity) props.severity = severity;
+    if (icon) props.icon = icon;
+    if (contentChild) props.contentChild = contentChild;
+    if (actionPayload) props.action = actionPayload;
+    return component(id, 'TimelineItem', props);
+};
+
+export const timelineGroup = (
+    id: string,
+    groupId: string,
+    children: JsonObject,
+    title?: JsonObject,
+    summary?: JsonObject,
+    collapsed?: JsonObject,
+    badgeCount?: JsonObject,
+    groupState?: string
+): JsonObject => {
+    const props: JsonObject = { groupId, children };
+    if (title) props.title = title;
+    if (summary) props.summary = summary;
+    if (collapsed) props.collapsed = collapsed;
+    if (badgeCount) props.badgeCount = badgeCount;
+    if (groupState) props.groupState = groupState;
+    return component(id, 'TimelineGroup', props);
+};
+
+export const timelineLane = (
+    id: string,
+    laneId: string,
+    children: JsonObject,
+    title?: JsonObject
+): JsonObject => {
+    const props: JsonObject = { laneId, children };
+    if (title) props.title = title;
+    return component(id, 'TimelineLane', props);
+};

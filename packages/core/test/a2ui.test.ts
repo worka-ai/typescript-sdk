@@ -19,10 +19,16 @@ import {
     dateTimeInput,
     audioPlayer,
     video,
+    timeline,
+    timelineItem,
+    timelineGroup,
+    timelineLane,
     stringRefLiteral,
     stringRefPath,
     stringArrayRefPath,
     numberRefPath,
+    numberRefLiteral,
+    boolRefLiteral,
     childrenExplicit,
     childrenTemplate,
     action
@@ -195,6 +201,101 @@ describe('A2UI builder', () => {
         expect(video('video', stringRefLiteral('https://example.com/video.mp4'))).toEqual({
             id: 'video',
             component: { Video: { url: { literalString: 'https://example.com/video.mp4' } } }
+        });
+
+        expect(
+            timeline(
+                'timeline',
+                childrenExplicit(['item-1', 'item-2']),
+                'vertical',
+                'alternate',
+                boolRefLiteral(true),
+                'single',
+                stringRefLiteral('item-2')
+            )
+        ).toEqual({
+            id: 'timeline',
+            component: {
+                Timeline: {
+                    children: { explicitList: ['item-1', 'item-2'] },
+                    orientation: 'vertical',
+                    alignment: 'alternate',
+                    autoFollow: { literalBoolean: true },
+                    laneMode: 'single',
+                    currentItemId: { literalString: 'item-2' }
+                }
+            }
+        });
+
+        expect(
+            timelineItem(
+                'item-1',
+                'item-1',
+                stringRefLiteral('Step Started'),
+                stringRefLiteral('Preparing data'),
+                stringRefLiteral('2026-01-24T00:00:00Z'),
+                'step',
+                'running',
+                'info',
+                stringRefLiteral('bolt'),
+                'detail',
+                action('timeline.focus_item')
+            )
+        ).toEqual({
+            id: 'item-1',
+            component: {
+                TimelineItem: {
+                    itemId: 'item-1',
+                    title: { literalString: 'Step Started' },
+                    subtitle: { literalString: 'Preparing data' },
+                    timestamp: { literalString: '2026-01-24T00:00:00Z' },
+                    kind: 'step',
+                    state: 'running',
+                    severity: 'info',
+                    icon: { literalString: 'bolt' },
+                    contentChild: 'detail',
+                    action: { name: 'timeline.focus_item' }
+                }
+            }
+        });
+
+        expect(
+            timelineGroup(
+                'group-1',
+                'group-1',
+                childrenExplicit(['item-1']),
+                stringRefLiteral('Task Group'),
+                stringRefLiteral('2 tasks'),
+                boolRefLiteral(false),
+                numberRefLiteral(2),
+                'running'
+            )
+        ).toEqual({
+            id: 'group-1',
+            component: {
+                TimelineGroup: {
+                    groupId: 'group-1',
+                    children: { explicitList: ['item-1'] },
+                    title: { literalString: 'Task Group' },
+                    summary: { literalString: '2 tasks' },
+                    collapsed: { literalBoolean: false },
+                    badgeCount: { literalNumber: 2 },
+                    groupState: 'running'
+                }
+            }
+        });
+
+        expect(
+            timelineLane('lane-1', 'lane-1', childrenExplicit(['item-1']), stringRefLiteral('Lane A'))
+        ).toEqual({
+            id: 'lane-1',
+            component: {
+                TimelineLane: {
+                    laneId: 'lane-1',
+                    children: { explicitList: ['item-1'] },
+                    title: { literalString: 'Lane A' }
+                }
+            }
         });
     });
 });
