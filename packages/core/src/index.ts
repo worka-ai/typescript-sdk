@@ -13,6 +13,7 @@ export * from './util/inMemory.js';
 export * from './util/zodCompat.js';
 export * from './util/zodJsonSchemaCompat.js';
 export * from './a2ui/index.js';
+export * from './ui/index.js';
 
 // experimental exports
 export * from './experimental/index.js';
