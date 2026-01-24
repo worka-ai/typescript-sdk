@@ -25,7 +25,7 @@ export const boolRefPath = (path: string): JsonObject => ({
 });
 
 export const stringArrayRefLiteral = (values: string[]): JsonObject => ({
-    literalArray: values
+    literalStringArray: values
 });
 
 export const stringArrayRefPath = (path: string): JsonObject => ({
