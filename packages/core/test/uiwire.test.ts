@@ -32,9 +32,9 @@ import {
     childrenExplicit,
     childrenTemplate,
     action
-} from '../src/a2ui/index.js';
+} from '../src/uiwire/index.js';
 
-describe('A2UI builder', () => {
+describe('UI wire builder', () => {
     test('serializes core widgets', () => {
         expect(text('text', stringRefLiteral('Hello'), 'h1')).toEqual({
             id: 'text',

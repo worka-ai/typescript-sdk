@@ -1,4 +1,4 @@
-import * as a2ui from '../a2ui/index.js';
+import * as uiwire from '../uiwire/index.js';
 
 export type UiString = UiStringLiteral | UiStringPath;
 export type UiNumber = UiNumberLiteral | UiNumberPath;
@@ -233,7 +233,7 @@ export class TimelineLane extends UiWidget {
     }
 }
 
-export type UiRenderResult = { root: string; components: a2ui.JsonObject[] };
+export type UiRenderResult = { root: string; components: uiwire.JsonObject[] };
 
 export const render = (root: UiWidget): UiRenderResult => {
     const serializer = new UiSerializer();
@@ -243,31 +243,31 @@ export const render = (root: UiWidget): UiRenderResult => {
 
 class UiSerializer {
     private counter = 0;
-    public components: a2ui.JsonObject[] = [];
+    public components: uiwire.JsonObject[] = [];
 
     private nextId() {
         this.counter += 1;
         return `ui-${this.counter}`;
     }
 
-    private renderChildren(children: UiChildren): a2ui.JsonObject {
+    private renderChildren(children: UiChildren): uiwire.JsonObject {
         if (children instanceof UiChildrenTemplate) {
             const id = this.renderWidget(children.template);
-            return a2ui.childrenTemplate(id, children.dataBinding);
+            return uiwire.childrenTemplate(id, children.dataBinding);
         }
         const ids = children.items.map((child) => this.renderWidget(child));
-        return a2ui.childrenExplicit(ids);
+        return uiwire.childrenExplicit(ids);
     }
 
     public renderWidget(widget: UiWidget): string {
         const id = widget.id ?? this.nextId();
         const component = this.renderKind(widget);
-        const entry = a2ui.component(id, component.type, component.props, widget.weight);
+        const entry = uiwire.component(id, component.type, component.props, widget.weight);
         this.components.push(entry);
         return id;
     }
 
-    private renderKind(widget: UiWidget): { type: string; props: a2ui.JsonObject } {
+    private renderKind(widget: UiWidget): { type: string; props: uiwire.JsonObject } {
         if (widget instanceof Text) {
             return { type: 'Text', props: { text: toStringRef(widget.text), usageHint: widget.usageHint } };
         }
@@ -461,21 +461,21 @@ class UiSerializer {
     }
 }
 
-const toStringRef = (value: UiString): a2ui.JsonObject =>
-    value instanceof UiStringPath ? a2ui.stringRefPath(value.path) : a2ui.stringRefLiteral(value.value);
+const toStringRef = (value: UiString): uiwire.JsonObject =>
+    value instanceof UiStringPath ? uiwire.stringRefPath(value.path) : uiwire.stringRefLiteral(value.value);
 
-const toNumberRef = (value: UiNumber): a2ui.JsonObject =>
-    value instanceof UiNumberPath ? a2ui.numberRefPath(value.path) : a2ui.numberRefLiteral(value.value);
+const toNumberRef = (value: UiNumber): uiwire.JsonObject =>
+    value instanceof UiNumberPath ? uiwire.numberRefPath(value.path) : uiwire.numberRefLiteral(value.value);
 
-const toBoolRef = (value: UiBool): a2ui.JsonObject =>
-    value instanceof UiBoolPath ? a2ui.boolRefPath(value.path) : a2ui.boolRefLiteral(value.value);
+const toBoolRef = (value: UiBool): uiwire.JsonObject =>
+    value instanceof UiBoolPath ? uiwire.boolRefPath(value.path) : uiwire.boolRefLiteral(value.value);
 
-const toStringArrayRef = (value: UiStringArray): a2ui.JsonObject =>
+const toStringArrayRef = (value: UiStringArray): uiwire.JsonObject =>
     value instanceof UiStringArrayPath
-        ? a2ui.stringArrayRefPath(value.path)
-        : a2ui.stringArrayRefLiteral(value.value);
+        ? uiwire.stringArrayRefPath(value.path)
+        : uiwire.stringArrayRefLiteral(value.value);
 
-const toAction = (action: UiAction): a2ui.JsonObject => {
+const toAction = (action: UiAction): uiwire.JsonObject => {
     const context =
         action.context && Object.keys(action.context).length > 0
             ? Object.entries(action.context).map(([key, value]) => ({
@@ -483,13 +483,13 @@ const toAction = (action: UiAction): a2ui.JsonObject => {
                   value: toActionValue(value)
               }))
             : undefined;
-    return a2ui.action(action.name, context);
+    return uiwire.action(action.name, context);
 };
 
-const toActionValue = (value: UiActionValue): a2ui.JsonObject => {
-    if (value instanceof UiActionValuePath) return a2ui.actionValuePath(value.path);
-    if (value instanceof UiActionValueString) return a2ui.actionValueLiteralString(value.value);
-    if (value instanceof UiActionValueNumber) return a2ui.actionValueLiteralNumber(value.value);
-    if (value instanceof UiActionValueBool) return a2ui.actionValueLiteralBoolean(value.value);
+const toActionValue = (value: UiActionValue): uiwire.JsonObject => {
+    if (value instanceof UiActionValuePath) return uiwire.actionValuePath(value.path);
+    if (value instanceof UiActionValueString) return uiwire.actionValueLiteralString(value.value);
+    if (value instanceof UiActionValueNumber) return uiwire.actionValueLiteralNumber(value.value);
+    if (value instanceof UiActionValueBool) return uiwire.actionValueLiteralBoolean(value.value);
     return {};
 };
